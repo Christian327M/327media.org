@@ -4,45 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>327 Media</title>
-  <meta name="description" content="327 Media — independent American media covering politics, markets, sports, and culture." />
+  <meta name="description" content="327 Media — independent American media covering politics, markets, sports, and current events." />
   <style>
     :root {
-      --bg: #07162b;
-      --bg-2: #0b2140;
-      --bg-3: #102a52;
-      --card: rgba(13, 33, 64, 0.92);
-      --card-2: rgba(9, 24, 47, 0.95);
-      --text: #f6f8fc;
-      --muted: #b7c5da;
+      --bg: #07152a;
+      --bg-2: #0d2242;
+      --card: rgba(12, 31, 60, 0.94);
+      --card-2: rgba(8, 22, 43, 0.96);
       --line: rgba(255,255,255,0.12);
+      --text: #f5f8fd;
+      --muted: #b7c5d8;
       --red: #d7263d;
-      --red-2: #ef4f63;
-      --blue: #2458b8;
+      --red-2: #f14a62;
+      --blue: #2f67c7;
       --white: #ffffff;
-      --shadow: 0 16px 38px rgba(0,0,0,0.28);
+      --shadow: 0 18px 42px rgba(0,0,0,0.28);
       --radius: 20px;
       --radius-sm: 14px;
-      --max: 1360px;
+      --max: 1380px;
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 12% 0%, rgba(36,88,184,0.16), transparent 22%),
-        radial-gradient(circle at 88% 0%, rgba(215,38,61,0.14), transparent 20%),
-        linear-gradient(180deg, #07162b 0%, #081b35 52%, #06121f 100%);
+        radial-gradient(circle at top left, rgba(47,103,199,0.16), transparent 22%),
+        radial-gradient(circle at top right, rgba(215,38,61,0.14), transparent 18%),
+        linear-gradient(180deg, #07152a 0%, #081b35 50%, #06111f 100%);
     }
 
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
-    iframe { display: block; }
+    iframe { display: block; border: 0; }
     button, input, textarea { font: inherit; }
 
-    .top-ticker {
+    .top-bar {
       position: sticky;
       top: 0;
       z-index: 100;
@@ -50,22 +49,20 @@
       border-bottom: 1px solid var(--line);
       backdrop-filter: blur(10px);
     }
-
-    .top-ticker-inner {
+    .top-bar-inner {
       max-width: var(--max);
       margin: 0 auto;
       padding: 0 12px;
     }
 
-    .site-header {
+    .header {
       position: sticky;
       top: 56px;
       z-index: 90;
-      background: rgba(7, 22, 43, 0.9);
+      background: rgba(7, 21, 42, 0.9);
       border-bottom: 1px solid var(--line);
       backdrop-filter: blur(14px);
     }
-
     .header-inner {
       max-width: var(--max);
       margin: 0 auto;
@@ -82,24 +79,30 @@
       gap: 12px;
       min-width: 0;
     }
-
     .brand-mark {
-      width: 58px;
-      height: 58px;
-      border-radius: 16px;
+      width: 96px;
+      height: 96px;
+      border-radius: 18px;
       overflow: hidden;
       border: 1px solid var(--line);
       background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
       box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex: 0 0 auto;
+      padding: 6px;
     }
-  
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
     .brand-copy strong {
       display: block;
-      font-size: 21px;
+      font-size: 22px;
       letter-spacing: 0.02em;
     }
-
     .brand-copy span {
       display: block;
       color: var(--muted);
@@ -115,7 +118,6 @@
       gap: 10px;
       min-width: 0;
     }
-
     .search-shell {
       flex: 1;
       display: flex;
@@ -127,7 +129,6 @@
       padding: 11px 15px;
       min-width: 0;
     }
-
     .search-shell input {
       width: 100%;
       min-width: 0;
@@ -136,8 +137,7 @@
       border: 0;
       outline: none;
     }
-
-    .search-shell input::placeholder { color: #90a3c0; }
+    .search-shell input::placeholder { color: #93a8c8; }
 
     .nav {
       display: flex;
@@ -145,7 +145,6 @@
       flex-wrap: wrap;
       justify-content: flex-end;
     }
-
     .nav a {
       padding: 10px 14px;
       border-radius: 999px;
@@ -153,7 +152,6 @@
       border: 1px solid transparent;
       transition: .18s ease;
     }
-
     .nav a:hover, .nav a.active {
       background: rgba(255,255,255,0.05);
       color: var(--white);
@@ -172,13 +170,11 @@
       cursor: pointer;
       transition: .18s ease;
     }
-
     .btn:hover { transform: translateY(-1px); }
     .btn-primary {
       background: linear-gradient(135deg, var(--red), var(--red-2));
       border-color: rgba(255,255,255,0.08);
     }
-
     .btn-secondary { background: rgba(255,255,255,0.04); }
 
     .container {
@@ -189,11 +185,10 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 0.95fr 1.4fr 1fr;
+      grid-template-columns: 0.95fr 1.35fr 1fr;
       gap: 18px;
       align-items: stretch;
     }
-
     .card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -201,9 +196,7 @@
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-
     .pad { padding: 18px; }
-
     .eyebrow {
       display: inline-flex;
       align-items: center;
@@ -215,43 +208,40 @@
       font-weight: 700;
       margin-bottom: 12px;
     }
-
-    h1.hero-title {
+    .hero-title {
       margin: 0 0 14px;
-      font-size: clamp(30px, 4vw, 52px);
+      font-size: clamp(30px, 4vw, 54px);
       line-height: 1.02;
       max-width: 10ch;
     }
-
     .subcopy {
       color: var(--muted);
       line-height: 1.62;
       margin: 0;
       font-size: 15px;
     }
-
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       margin-top: 18px;
     }
-
-    .mini-list { display: grid; gap: 12px; margin-top: 18px; }
-
+    .mini-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
     .mini-card {
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: var(--radius-sm);
       background: rgba(255,255,255,0.035);
       padding: 14px;
     }
-
     .mini-card strong {
       display: block;
       margin-bottom: 5px;
       font-size: 15px;
     }
-
     .mini-card span {
       color: var(--muted);
       font-size: 13px;
@@ -262,9 +252,8 @@
       background:
         linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
         radial-gradient(circle at top right, rgba(215,38,61,0.12), transparent 35%),
-        radial-gradient(circle at top left, rgba(36,88,184,0.12), transparent 34%);
+        radial-gradient(circle at top left, rgba(47,103,199,0.12), transparent 34%);
     }
-
     .card-top {
       display: flex;
       justify-content: space-between;
@@ -272,13 +261,11 @@
       gap: 12px;
       padding: 16px 18px 0;
     }
-
     .feature-title {
       font-size: 26px;
       font-weight: 800;
       line-height: 1.15;
     }
-
     .pill {
       display: inline-flex;
       align-items: center;
@@ -290,25 +277,22 @@
       font-size: 12px;
       white-space: nowrap;
     }
-
     .feature iframe {
       width: 100%;
       height: 460px;
-      border: 0;
-      margin-top: 14px;
       background: #000;
+      margin-top: 14px;
     }
-
+    .x-wrap { padding: 0 14px 14px; }
     .x-slot {
-      min-height: 425px;
+      min-height: 420px;
       border: 1px dashed rgba(255,255,255,0.16);
       border-radius: 18px;
       background: rgba(255,255,255,0.03);
-      padding: 14px;
+      padding: 8px;
     }
 
     .section { padding-top: 32px; }
-
     .section-head {
       display: flex;
       justify-content: space-between;
@@ -316,12 +300,10 @@
       gap: 14px;
       margin-bottom: 16px;
     }
-
     .section-head h2 {
       margin: 0;
       font-size: clamp(24px, 2.8vw, 36px);
     }
-
     .section-head p {
       margin: 6px 0 0;
       color: var(--muted);
@@ -337,9 +319,7 @@
       display: grid;
       gap: 18px;
     }
-
     .news-grid { grid-template-columns: 1fr 1fr; }
-
     .story-card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -347,16 +327,13 @@
       background: linear-gradient(180deg, var(--card), var(--card-2));
       box-shadow: var(--shadow);
     }
-
     .story-img {
       width: 100%;
       aspect-ratio: 16 / 9;
       object-fit: cover;
       background: #123154;
     }
-
     .story-body { padding: 17px; }
-
     .story-tag {
       color: #ffced5;
       text-transform: uppercase;
@@ -365,19 +342,16 @@
       font-weight: 700;
       margin-bottom: 10px;
     }
-
     .story-body h3 {
       margin: 0 0 10px;
       font-size: 21px;
       line-height: 1.18;
     }
-
     .story-body p {
       margin: 0 0 14px;
       color: var(--muted);
       line-height: 1.6;
     }
-
     .story-link {
       display: inline-flex;
       gap: 8px;
@@ -390,24 +364,19 @@
       gap: 18px;
       margin-top: 18px;
     }
-
     .split-col {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 16px;
       background: rgba(255,255,255,0.03);
     }
-
     .split-col h3 { margin: 0 0 12px; font-size: 19px; }
-
     .headline-list { display: grid; gap: 12px; }
-
     .headline-list a {
       padding-bottom: 11px;
       border-bottom: 1px dashed rgba(255,255,255,0.12);
       color: var(--muted);
     }
-
     .headline-list a strong {
       display: block;
       color: var(--white);
@@ -415,26 +384,16 @@
     }
 
     .stocks-grid { grid-template-columns: 1.25fr 0.75fr; }
-
     .widget-shell iframe,
-    .pod-video iframe,
-    .sports-embed iframe {
-      width: 100%;
-      border: 0;
-      background: #0a1525;
-    }
-
+    .pod-video iframe { width: 100%; background: #0a1525; }
     .widget-shell iframe { height: 620px; }
     .pod-video iframe { height: 500px; }
-    .sports-embed iframe { height: 420px; }
-
     .tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       padding: 14px 18px 0;
     }
-
     .tab-btn {
       padding: 9px 12px;
       border-radius: 999px;
@@ -443,12 +402,10 @@
       color: var(--muted);
       cursor: pointer;
     }
-
     .tab-btn.active {
       color: var(--white);
-      background: linear-gradient(135deg, rgba(215,38,61,0.95), rgba(36,88,184,0.95));
+      background: linear-gradient(135deg, rgba(215,38,61,0.95), rgba(47,103,199,0.95));
     }
-
     .table-wrap { padding: 16px 18px 18px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td {
@@ -461,14 +418,12 @@
     .down { color: #ff9daa; }
 
     .podcast-grid { grid-template-columns: 0.72fr 1.28fr; }
-
     .cia-card {
       position: relative;
       background:
         linear-gradient(180deg, rgba(12,26,48,0.98), rgba(8,19,37,0.98)),
         linear-gradient(135deg, rgba(255,122,24,0.08), rgba(0,93,191,0.08), rgba(209,34,34,0.08));
     }
-
     .cia-card::before {
       content: "";
       position: absolute;
@@ -476,30 +431,31 @@
       background: linear-gradient(135deg, rgba(255,122,24,0.08), rgba(0,93,191,0.08), rgba(209,34,34,0.08));
       pointer-events: none;
     }
-
     .cia-card > * { position: relative; }
-
     .cia-inner {
       padding: 18px;
       display: grid;
       gap: 14px;
     }
-
     .cia-logo {
       border-radius: 24px;
       overflow: hidden;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.04);
+      padding: 10px;
+    }
+    .cia-logo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
     }
 
     .sports-grid { grid-template-columns: 1fr 1fr; }
-
     .score-list {
       display: grid;
       gap: 10px;
       padding: 18px;
     }
-
     .score-row {
       display: flex;
       justify-content: space-between;
@@ -510,18 +466,28 @@
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.03);
     }
-
     .score-row strong { display: block; }
     .score-row span { color: var(--muted); font-size: 13px; }
+    .sports-links { padding: 0 18px 18px; display: grid; gap: 10px; }
+    .sports-links a {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+    }
+    .sports-links a strong {
+      display: block;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
 
     .about-grid { grid-template-columns: 1.05fr 0.95fr; }
-
     .about-copy {
       padding: 18px;
       display: grid;
       gap: 16px;
     }
-
     .values-line {
       display: inline-flex;
       flex-wrap: wrap;
@@ -529,32 +495,28 @@
       padding: 12px 16px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: linear-gradient(135deg, rgba(215,38,61,0.16), rgba(36,88,184,0.16));
+      background: linear-gradient(135deg, rgba(215,38,61,0.16), rgba(47,103,199,0.16));
       font-weight: 800;
     }
-
     .quote-text {
       margin: 0;
       font-style: italic;
       color: #d6e2f8;
       line-height: 1.6;
     }
-
     .about-photo {
       width: 100%;
       aspect-ratio: 4/3;
-      object-fit: cover;
+      object-fit: contain;
+      background: rgba(255,255,255,0.03);
+      padding: 10px;
     }
 
     .contact-grid { grid-template-columns: 0.82fr 1.18fr; }
     .contact-info, .contact-form { padding: 18px; }
-
     .form-grid { display: grid; gap: 12px; }
-
     .field { display: grid; gap: 8px; }
-
     .field label { color: var(--muted); font-size: 13px; }
-
     .field input, .field textarea {
       width: 100%;
       border: 1px solid var(--line);
@@ -564,9 +526,7 @@
       padding: 12px 14px;
       outline: none;
     }
-
     .field textarea { min-height: 160px; resize: vertical; }
-
     .success-note {
       display: none;
       padding: 12px 14px;
@@ -581,16 +541,13 @@
       border-top: 1px solid var(--line);
       padding-top: 24px;
     }
-
     .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
-
     .footer-card {
       padding: 16px;
       border: 1px solid var(--line);
       border-radius: 16px;
       background: rgba(255,255,255,0.03);
     }
-
     .footer-card h4 { margin: 0 0 10px; }
     .footer-card p, .footer-card a { color: var(--muted); line-height: 1.6; }
 
@@ -603,30 +560,28 @@
       .contact-grid,
       .footer-grid { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 980px) {
       .header-inner { grid-template-columns: 1fr; }
       .nav { justify-content: flex-start; }
       .news-grid, .split-news { grid-template-columns: 1fr; }
-      .site-header { top: 56px; }
+      .header { top: 56px; }
       .feature iframe,
       .widget-shell iframe,
       .pod-video iframe { height: 360px; }
     }
-
     @media (max-width: 640px) {
-      .container, .header-inner, .top-ticker-inner { padding-left: 14px; padding-right: 14px; }
-      .brand-mark { width: 48px; height: 48px; }
+      .container, .header-inner, .top-bar-inner { padding-left: 14px; padding-right: 14px; }
+      .brand-mark { width: 78px; height: 78px; }
       .brand-copy strong { font-size: 18px; }
-      h1.hero-title { max-width: none; font-size: 34px; }
+      .hero-title { max-width: none; font-size: 34px; }
       .hero-actions { display: grid; }
       .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="top-ticker">
-    <div class="top-ticker-inner">
+  <div class="top-bar">
+    <div class="top-bar-inner">
       <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
       {
         "symbols": [
@@ -646,11 +601,11 @@
     </div>
   </div>
 
-  <header class="site-header">
+  <header class="header">
     <div class="header-inner">
       <a class="brand" href="#home" aria-label="327 Media home">
         <div class="brand-mark">
-          <img src="327 media(2).png" alt="327 Media logo" />
+          <img src="./327%20media(2).png" alt="327 Media logo" />
         </div>
         <div class="brand-copy">
           <strong>327 Media</strong>
@@ -682,20 +637,20 @@
     <section class="hero" id="home">
       <article class="card pad">
         <div class="eyebrow">Breaking Desk</div>
-        <h1 class="hero-title">Truth, markets, and an American point of view.</h1>
-        <p class="subcopy">327 Media is built to feel sharper, cleaner, and more professional — with politics, stocks, sports, and breaking commentary in one premium newsroom-style home page.</p>
+        <h1 class="hero-title">Truth, markets, sports, and current events in one sharp newsroom.</h1>
+        <p class="subcopy">327 Media is designed to feel more premium and more professional, while still staying cheap to run and easy for you to control on GitHub Pages.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#podcast">Watch latest podcast</a>
-          <a class="btn btn-secondary" href="#news">View today’s stories</a>
+          <a class="btn btn-secondary" href="#news">Open latest stories</a>
         </div>
         <div class="mini-list">
           <div class="mini-card">
             <strong>Breaking News Spotlight</strong>
-            <span>Use this for your biggest headline of the day and swap in a fresh one whenever needed.</span>
+            <span>Use this space for your biggest headline of the day with one strong summary and one clean source link.</span>
           </div>
           <div class="mini-card">
             <strong>Market Pulse</strong>
-            <span>Use this for your top market angle, sector move, or why the market changed today.</span>
+            <span>Use this for your top stock angle, crypto move, oil update, or what matters most in markets today.</span>
           </div>
         </div>
       </article>
@@ -711,14 +666,18 @@
         <iframe src="https://www.youtube.com/embed/zP0T28wSa-E" title="CIA Podcast featured episode" allowfullscreen></iframe>
       </article>
 
-      <article class="card pad">
-        <div class="eyebrow">Live from X</div>
-        <div style="font-size:26px;font-weight:800;margin-bottom:12px;">@327media1</div>
-        <div class="x-slot">
-          <a class="twitter-timeline" data-theme="dark" data-height="390" href="https://twitter.com/327Media1?ref_src=twsrc%5Etfw">Tweets by 327Media1</a>
+      <article class="card">
+        <div class="card-top">
+          <div>
+            <div class="eyebrow">Live from X</div>
+            <div style="font-size:26px;font-weight:800;">@327media1</div>
+          </div>
+          <a class="pill" href="https://x.com/327Media1" target="_blank" rel="noreferrer">Open profile</a>
         </div>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-          <a class="btn btn-secondary" href="https://x.com/327Media1" target="_blank" rel="noreferrer">Open X account</a>
+        <div class="x-wrap">
+          <div class="x-slot">
+            <a class="twitter-timeline" data-theme="dark" data-height="390" href="https://twitter.com/327Media1?ref_src=twsrc%5Etfw">Tweets by 327Media1</a>
+          </div>
         </div>
       </article>
     </section>
@@ -727,27 +686,28 @@
       <div class="section-head">
         <div>
           <h2>Latest News</h2>
-          <p>Cleaner story cards, stronger visuals, and real links for your latest coverage.</p>
+          <p>Use these for real stories and real source links. I set them up as professional cards instead of random placeholders.</p>
         </div>
       </div>
 
       <div class="news-grid">
         <article class="story-card">
-          <img class="story-img" src="square(1).png" alt="327 Media feature visual" />
+          <img class="story-img" src="./327(2).png" alt="327 Media feature visual" />
           <div class="story-body">
             <div class="story-tag">Top Story</div>
-            <h3>Your strongest headline belongs here</h3>
-            <p>Use this first card for your biggest story, your article, or your best commentary piece with a strong click-through angle.</p>
+            <h3>Featured article and commentary</h3>
+            <p>Use this first card for your strongest article, biggest headline, or a daily breakdown tied to your X coverage.</p>
             <a class="story-link" href="https://x.com/327Media1/status/2043666568538959999" target="_blank" rel="noreferrer">Read your article →</a>
           </div>
         </article>
+
         <article class="story-card">
-          <img class="story-img" src="327(2).png" alt="327 Media alternate logo art" />
+          <img class="story-img" src="./square(1).png" alt="CIA Podcast visual" />
           <div class="story-body">
             <div class="story-tag">Spotlight</div>
-            <h3>Markets, politics, and current events in one place</h3>
-            <p>This second card can point readers to your market coverage, a latest breaking story, or a major headline of the day.</p>
-            <a class="story-link" href="#stocks">Go to stocks →</a>
+            <h3>Podcast, politics, and market commentary</h3>
+            <p>This second card can feature your daily podcast angle, a breaking story, or a major news summary with a strong click-through.</p>
+            <a class="story-link" href="#podcast">Go to podcast →</a>
           </div>
         </article>
       </div>
@@ -756,17 +716,17 @@
         <div class="split-col">
           <h3>Left Perspective</h3>
           <div class="headline-list">
-            <a href="#"><strong>Story title one</strong>Put a short summary and source link here.</a>
-            <a href="#"><strong>Story title two</strong>Put a short summary and source link here.</a>
-            <a href="#"><strong>Story title three</strong>Put a short summary and source link here.</a>
+            <a href="https://www.nytimes.com/section/politics" target="_blank" rel="noreferrer"><strong>New York Times Politics</strong>Direct source for left-leaning mainstream political coverage.</a>
+            <a href="https://www.washingtonpost.com/politics/" target="_blank" rel="noreferrer"><strong>Washington Post Politics</strong>Another major source for establishment-left national coverage.</a>
+            <a href="https://www.cnn.com/politics" target="_blank" rel="noreferrer"><strong>CNN Politics</strong>Live politics desk for current headlines and breaking updates.</a>
           </div>
         </div>
         <div class="split-col">
           <h3>Right Perspective</h3>
           <div class="headline-list">
-            <a href="#"><strong>Story title one</strong>Put a short summary and source link here.</a>
-            <a href="#"><strong>Story title two</strong>Put a short summary and source link here.</a>
-            <a href="#"><strong>Story title three</strong>Put a short summary and source link here.</a>
+            <a href="https://www.foxnews.com/politics" target="_blank" rel="noreferrer"><strong>Fox News Politics</strong>Direct source for major conservative-oriented political coverage.</a>
+            <a href="https://www.dailywire.com/" target="_blank" rel="noreferrer"><strong>Daily Wire</strong>Opinion-heavy right-leaning current events and politics.</a>
+            <a href="https://nypost.com/politics/" target="_blank" rel="noreferrer"><strong>New York Post Politics</strong>Fast-moving headlines and sharper political framing.</a>
           </div>
         </div>
       </div>
@@ -776,7 +736,7 @@
       <div class="section-head">
         <div>
           <h2>Stocks</h2>
-          <p>Live-looking counters and charts through third-party widgets instead of your own expensive backend.</p>
+          <p>These live widgets are real and update from TradingView, so you get the professional look without building your own backend.</p>
         </div>
       </div>
 
@@ -840,7 +800,7 @@
         <article class="card">
           <div class="card-top">
             <h3 style="margin:0;font-size:21px;">Top movers</h3>
-            <span class="pill">Static leaderboard</span>
+            <span class="pill">Quick board</span>
           </div>
           <div class="tabs">
             <button class="tab-btn active" data-tab="tech">Tech</button>
@@ -864,7 +824,7 @@
       <div class="section-head">
         <div>
           <h2>CIA Podcast</h2>
-          <p>Your podcast branding stays distinct while the rest of the site keeps the main 327 Media look.</p>
+          <p>This section uses your CIA branding and links directly to your real YouTube channel.</p>
         </div>
       </div>
 
@@ -872,12 +832,12 @@
         <article class="card cia-card">
           <div class="cia-inner">
             <a class="cia-logo" href="https://www.youtube.com/@CIApodcastTV" target="_blank" rel="noreferrer">
-              <img src="square(1).png" alt="CIA Podcast logo" />
+              <img src="./square(1).png" alt="CIA Podcast logo" />
             </a>
             <div>
               <div class="eyebrow">Podcast brand</div>
               <div style="font-size:29px;font-weight:800;">CIA Podcast</div>
-              <p class="subcopy" style="margin-top:10px;">Use this panel for your show description, episode notes, and a link to your full YouTube channel.</p>
+              <p class="subcopy" style="margin-top:10px;">Use this panel for your show description, episode notes, and your main YouTube channel link.</p>
             </div>
             <a class="btn btn-primary" href="https://www.youtube.com/@CIApodcastTV" target="_blank" rel="noreferrer">Visit CIA Podcast channel</a>
           </div>
@@ -897,35 +857,38 @@
       <div class="section-head">
         <div>
           <h2>Sports</h2>
-          <p>A cleaner sports section now, with room to swap in better live widgets later.</p>
+          <p>A better sports tab with useful live links now, instead of fake random games.</p>
         </div>
       </div>
 
       <div class="sports-grid">
         <article class="card">
           <div class="card-top">
-            <h3 style="margin:0;font-size:21px;">Scoreboard</h3>
-            <span class="pill">Featured updates</span>
+            <h3 style="margin:0;font-size:21px;">Live score hubs</h3>
+            <span class="pill">Real links</span>
           </div>
-          <div class="score-list">
-            <div class="score-row"><div><strong>NBA</strong><span>Featured game</span></div><div>102–99</div></div>
-            <div class="score-row"><div><strong>NFL</strong><span>Featured game</span></div><div>24–17</div></div>
-            <div class="score-row"><div><strong>MLB</strong><span>Featured game</span></div><div>5–3</div></div>
-            <div class="score-row"><div><strong>UFC</strong><span>Main event</span></div><div>Live</div></div>
-            <div class="score-row"><div><strong>NHL</strong><span>Featured game</span></div><div>4–2</div></div>
-            <div class="score-row"><div><strong>Golf</strong><span>Leaderboard</span></div><div>T-1</div></div>
+          <div class="sports-links">
+            <a href="https://www.espn.com/nba/scoreboard" target="_blank" rel="noreferrer"><strong>NBA scoreboard</strong>Live NBA scores and game status.</a>
+            <a href="https://www.espn.com/nfl/scoreboard" target="_blank" rel="noreferrer"><strong>NFL scoreboard</strong>Live NFL scores and recent game coverage.</a>
+            <a href="https://www.espn.com/mlb/scoreboard" target="_blank" rel="noreferrer"><strong>MLB scoreboard</strong>Live MLB scores and box scores.</a>
+            <a href="https://www.espn.com/nhl/scoreboard" target="_blank" rel="noreferrer"><strong>NHL scoreboard</strong>Live NHL results and recent scores.</a>
+            <a href="https://www.espn.com/ufc/" target="_blank" rel="noreferrer"><strong>UFC</strong>Fight cards, results, and event updates.</a>
+            <a href="https://www.espn.com/golf/" target="_blank" rel="noreferrer"><strong>Golf</strong>Golf leaderboard and headlines.</a>
           </div>
         </article>
 
-        <article class="card sports-embed">
+        <article class="card">
           <div class="card-top">
-            <h3 style="margin:0;font-size:21px;">Sports headlines</h3>
-            <span class="pill">Use real links</span>
+            <h3 style="margin:0;font-size:21px;">Featured sports board</h3>
+            <span class="pill">Clean layout</span>
           </div>
           <div class="score-list">
-            <div class="mini-card"><strong>Headline one</strong><span>Add your latest sports angle or source link.</span></div>
-            <div class="mini-card"><strong>Headline two</strong><span>Add your latest sports angle or source link.</span></div>
-            <div class="mini-card"><strong>Headline three</strong><span>Add your latest sports angle or source link.</span></div>
+            <div class="score-row"><div><strong>NBA</strong><span>Jump to live board</span></div><div><a href="https://www.espn.com/nba/scoreboard" target="_blank" rel="noreferrer">Open</a></div></div>
+            <div class="score-row"><div><strong>NFL</strong><span>Jump to live board</span></div><div><a href="https://www.espn.com/nfl/scoreboard" target="_blank" rel="noreferrer">Open</a></div></div>
+            <div class="score-row"><div><strong>MLB</strong><span>Jump to live board</span></div><div><a href="https://www.espn.com/mlb/scoreboard" target="_blank" rel="noreferrer">Open</a></div></div>
+            <div class="score-row"><div><strong>UFC</strong><span>Jump to event hub</span></div><div><a href="https://www.espn.com/ufc/" target="_blank" rel="noreferrer">Open</a></div></div>
+            <div class="score-row"><div><strong>NHL</strong><span>Jump to live board</span></div><div><a href="https://www.espn.com/nhl/scoreboard" target="_blank" rel="noreferrer">Open</a></div></div>
+            <div class="score-row"><div><strong>Golf</strong><span>Jump to leaderboard</span></div><div><a href="https://www.espn.com/golf/" target="_blank" rel="noreferrer">Open</a></div></div>
           </div>
         </article>
       </div>
@@ -935,7 +898,7 @@
       <div class="section-head">
         <div>
           <h2>About 327 Media</h2>
-          <p>American, independent, and styled to feel premium instead of tacky.</p>
+          <p>American, independent, and styled to feel premium instead of messy.</p>
         </div>
       </div>
 
@@ -944,19 +907,19 @@
           <div class="about-copy">
             <div class="eyebrow">Mission</div>
             <div class="values-line">Jesus First. Family First. America First.</div>
-            <p class="subcopy">327 Media is a proudly American-based independent startup headquartered in California. We aim to deliver balanced coverage of politics, stocks, sports, and breaking news in a way that feels clear, direct, and trustworthy.</p>
+            <p class="subcopy">327 Media is a proudly American-based independent startup headquartered in California. The goal is to cover politics, stocks, sports, and breaking news in a clear, direct, and trustworthy way.</p>
             <p class="quote-text">“Mercy to the guilty is cruelty to the innocent.”</p>
             <p class="quote-text">“I have sworn upon the altar of God eternal hostility against every form of tyranny over the mind of man.”</p>
-            <p class="subcopy">Use this section for your own founder note, mission statement, and why viewers should follow your coverage.</p>
+            <p class="subcopy">Use this section for your founder note, what the brand stands for, and why people should follow your work.</p>
           </div>
         </article>
 
         <article class="card">
-          <img class="about-photo" src="327(2).png" alt="Headquarters visual" />
+          <img class="about-photo" src="./327(2).png" alt="327 Media about visual" />
           <div class="about-copy">
             <div class="eyebrow">Headquarters</div>
             <div style="font-size:26px;font-weight:800;">San Francisco, California</div>
-            <p class="subcopy">Add a short headquarters description here. You can later swap this image for a Golden Gate or office model image in the same file path.</p>
+            <p class="subcopy">Later, you can replace this with your Golden Gate or office image by changing one line in the file.</p>
           </div>
         </article>
       </div>
@@ -966,7 +929,7 @@
       <div class="section-head">
         <div>
           <h2>Contact</h2>
-          <p>This front-end form works as a demo now. To actually receive emails on GitHub Pages, connect it to Formspree later.</p>
+          <p>This works as a clean front-end form now. For real email delivery on GitHub Pages, connect it to Formspree later.</p>
         </div>
       </div>
 
@@ -1001,7 +964,7 @@
                 <textarea id="message" name="message" required></textarea>
               </div>
               <button class="btn btn-primary" type="submit">Send message</button>
-              <div class="success-note" id="successNote">Message form demo is working. Hook this form to Formspree later for real email delivery.</div>
+              <div class="success-note" id="successNote">Message form demo is working. Hook this to Formspree later for real email delivery.</div>
             </div>
           </form>
         </article>
@@ -1012,7 +975,7 @@
       <div class="footer-grid">
         <div class="footer-card">
           <h4>327 Media</h4>
-          <p>Independent American media covering politics, markets, sports, and daily culture with a sharper, premium look.</p>
+          <p>Independent American media covering politics, markets, sports, and daily culture with a sharper, more premium look.</p>
         </div>
         <div class="footer-card">
           <h4>Follow</h4>
@@ -1095,14 +1058,12 @@
     function runSearch() {
       const q = document.getElementById('siteSearch').value.trim().toLowerCase();
       if (!q) return;
-
       const found = searchMap.find(item => item.terms.some(term => q.includes(term)));
       if (found) {
         window.location.hash = found.target;
         document.querySelector(found.target)?.scrollIntoView({ behavior: 'smooth' });
         return;
       }
-
       const blocks = [...document.querySelectorAll('section, article, h2, h3, strong')];
       const match = blocks.find(el => el.textContent.toLowerCase().includes(q));
       if (match) {
