@@ -116,20 +116,76 @@
     .refresh-btn{background:var(--panel2);border:1px solid var(--line);color:#fff;border-radius:10px;padding:8px 14px;font-size:.85rem;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;font-family:inherit;}
     .refresh-btn:hover{background:var(--blue3);}
 
-    .news-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:24px;align-items:start;margin-top:0;}
-    .headline-list{display:grid;gap:14px;margin-top:18px;}
-    .headline-item{padding:18px;display:block;transition:.2s;}
-    .headline-item:hover{background:var(--soft);}
-    .headline-item strong{display:block;font-size:1.05rem;line-height:1.45;margin-bottom:8px;}
-    .headline-item span{color:var(--muted);font-size:.95rem;line-height:1.55;}
+   .news-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:24px;
+  align-items:start;
+  margin-top:0;
+}
 
-    .live-articles-box{background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:14px;max-height:340px;overflow-y:auto;margin-top:14px;}
-    .live-article-item{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.9rem;line-height:1.5;}
-    .live-article-item:last-child{border-bottom:none;}
-    .live-article-item a{color:#a8c4ff;font-weight:700;}
-    .live-article-item a:hover{color:#fff;}
-    .live-article-item .src-tag{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;}
-    .live-article-loading{color:var(--muted);padding:20px 0;text-align:center;}
+.live-articles-box{
+  background:var(--panel2);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  max-height:340px;
+  overflow-y:auto;
+  margin-top:14px;
+}
+
+.live-article-item{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.live-article-thumb{
+  width:100%;
+  height:90px;
+  object-fit:cover;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.live-article-copy a{
+  color:#fff;
+  font-weight:900;
+  font-size:1rem;
+  line-height:1.4;
+}
+
+.live-article-copy a:hover{
+  color:#dce7ff;
+}
+
+.live-article-copy p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:.9rem;
+  line-height:1.5;
+}
+
+.live-article-item:last-child{
+  border-bottom:none;
+}
+
+.live-article-item .src-tag{
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted2);
+  margin-bottom:4px;
+}
+
+.live-article-loading{
+  color:var(--muted);
+  padding:20px 0;
+  text-align:center;
+}
 
     .split-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;}
     .media-image{height:260px;width:100%;object-fit:cover;border-bottom:1px solid var(--line);}
@@ -458,18 +514,7 @@
       </div>
 
       <div class="news-grid">
-        <div class="card">
-          <div class="card-body-lg">
-            <div class="eyebrow" style="margin-bottom:0;">Lead Story</div>
-            <h3 style="font-size:2rem;line-height:1.15;font-weight:900;margin:10px 0 12px;">Breaking headlines, live updates, and coverage from every major outlet.</h3>
-            <p style="margin:0;color:var(--muted);line-height:1.75;">327 Media brings together the biggest stories across left and right media, wire services, and independent reporting — all in one front page.</p>
-            <div class="headline-list">
-              <a class="headline-item" href="https://www.reuters.com/" target="_blank" rel="noopener noreferrer"><strong>Reuters</strong><span>Breaking developments, global coverage, and market-moving headlines.</span></a>
-              <a class="headline-item" href="https://www.foxnews.com/" target="_blank" rel="noopener noreferrer"><strong>Fox News</strong><span>Top U.S. stories, major political developments, and fast-moving breaking coverage.</span></a>
-              <a class="headline-item" href="https://www.cnn.com/" target="_blank" rel="noopener noreferrer"><strong>CNN</strong><span>Major political and national stories driving the daily conversation.</span></a>
-            </div>
-          </div>
-        </div>
+     
         <div class="card">
           <div class="card-body-lg">
             <div class="eyebrow" style="margin-bottom:0;">🔴 Live Updates</div>
@@ -812,17 +857,128 @@
     document.getElementById('contactForm').addEventListener('submit',async(e)=>{e.preventDefault();const s=document.getElementById('formStatus'),b=document.getElementById('contactSubmitBtn');s.style.display='none';b.textContent='Sending...';b.disabled=true;try{const r=await fetch('https://formspree.io/f/mgorodro',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name:document.getElementById('contactName').value,email:document.getElementById('contactEmail').value,subject:document.getElementById('contactSubject').value,message:document.getElementById('contactMessage').value})});if(r.ok){s.textContent='✓ Message sent! We\'ll get back to you soon.';s.style.color='#7fff9e';document.getElementById('contactForm').reset();}else{s.textContent='Something went wrong. Email us at 327mediax@gmail.com';s.style.color='#ff6b6b';}}catch{s.textContent='Network error. Please email 327mediax@gmail.com directly.';s.style.color='#ff6b6b';}s.style.display='block';b.textContent='Send Message';b.disabled=false;});
   </script>
 
-  <!-- LIVE NEWS -->
-  <script>
-    const FB=[{title:"Markets rally as investors await Federal Reserve decision",source:"Reuters",url:"https://reuters.com"},{title:"White House releases new executive actions on trade policy",source:"AP News",url:"https://apnews.com"},{title:"NBA playoffs bracket takes shape with late-season standings",source:"ESPN",url:"https://espn.com"},{title:"Bitcoin holds above key support amid global uncertainty",source:"Bloomberg",url:"https://bloomberg.com"},{title:"Senate advances bipartisan legislation on infrastructure",source:"Fox News",url:"https://foxnews.com"},{title:"Tech earnings season kicks off with mixed results",source:"WSJ",url:"https://wsj.com"},{title:"Oil prices slide as global supply concerns ease",source:"Reuters",url:"https://reuters.com"},{title:"Trump weighs tariff extension amid trade negotiations",source:"CNN",url:"https://cnn.com"}];
-    const TK=["Markets open higher as Fed signals potential rate cuts","White House issues new statement on trade negotiations","NBA playoffs: top seeds advance after dominant performances","Bitcoin surges past key resistance level","New executive orders signed — details emerging","Breaking: major geopolitical developments in focus today","Sports: UFC main event sold out — fight week begins","Markets: S&P 500 approaches all-time highs"];
-    let ti=0;
-    function rotateTick(){const el=document.getElementById('liveNewsFeed');if(el)el.textContent=TK[ti++%TK.length];}
-    function renderArt(items){const b=document.getElementById('liveArticles');if(!b)return;b.innerHTML=items.map(i=>`<div class="live-article-item"><div class="src-tag">${i.source}</div><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></div>`).join('');}
-    async function fetchNews(){try{const feeds=[{url:'https://feeds.reuters.com/reuters/topNews',source:'Reuters'},{url:'https://rss.foxnews.com/fn/latest/feeds/atn',source:'Fox News'},{url:'https://rss.cnn.com/rss/edition.rss',source:'CNN'}];const f=feeds[Math.floor(Math.random()*feeds.length)];const r=await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=8`);const d=await r.json();if(d.status==='ok'&&d.items?.length){const it=d.items.slice(0,8).map(i=>({title:i.title,url:i.link,source:f.source}));renderArt(it);TK.splice(0,TK.length,...it.map(i=>i.title));}else throw new Error();}catch{renderArt(FB);}}
-    rotateTick();setInterval(rotateTick,5000);fetchNews();
-    document.getElementById('refreshNewsBtn')?.addEventListener('click',()=>{document.getElementById('liveArticles').innerHTML='<div class="live-article-loading">Refreshing...</div>';fetchNews();});
-  </script>
+<!-- LIVE NEWS -->
+<script>
+  const FB = [
+    {
+      title: "Markets rally as investors await Federal Reserve decision",
+      source: "Reuters",
+      url: "https://reuters.com",
+      image: "reuters.jpg",
+      description: "Breaking market coverage and investor reaction as policy expectations shift."
+    },
+    {
+      title: "White House releases new executive actions on trade policy",
+      source: "Fox News",
+      url: "https://foxnews.com",
+      image: "fox-news.jpg",
+      description: "Latest White House and political developments as trade policy stays in focus."
+    },
+    {
+      title: "NBA playoffs bracket takes shape with late-season standings",
+      source: "CNN",
+      url: "https://cnn.com",
+      image: "cnn.jpg",
+      description: "Sports and national coverage with the latest headlines shaping the day."
+    },
+    {
+      title: "Bitcoin holds above key support amid global uncertainty",
+      source: "Reuters",
+      url: "https://reuters.com",
+      image: "reuters.jpg",
+      description: "Crypto markets remain active as traders watch risk sentiment and macro headlines."
+    }
+  ];
+
+  const TK = [
+    "Markets open higher as Fed signals potential rate cuts",
+    "White House issues new statement on trade negotiations",
+    "NBA playoffs: top seeds advance after dominant performances",
+    "Bitcoin surges past key resistance level",
+    "New executive orders signed — details emerging",
+    "Breaking: major geopolitical developments in focus today",
+    "Sports: UFC main event sold out — fight week begins",
+    "Markets: S&P 500 approaches all-time highs"
+  ];
+
+  let ti = 0;
+
+  function rotateTick() {
+    const el = document.getElementById('liveNewsFeed');
+    if (el) el.textContent = TK[ti++ % TK.length];
+  }
+
+  function stripHtml(html = "") {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return (div.textContent || div.innerText || "").trim();
+  }
+
+  function fallbackImage(source = "") {
+    if (source === "Reuters") return "reuters.jpg";
+    if (source === "Fox News") return "fox-news.jpg";
+    if (source === "CNN") return "cnn.jpg";
+    return "left-media-main.jpg";
+  }
+
+  function renderArt(items) {
+    const b = document.getElementById('liveArticles');
+    if (!b) return;
+
+    b.innerHTML = items.map(i => `
+      <div class="live-article-item">
+        <a href="${i.url}" target="_blank" rel="noopener noreferrer">
+          <img class="live-article-thumb" src="${i.image}" alt="${i.title}" onerror="this.src='left-media-main.jpg'">
+        </a>
+        <div class="live-article-copy">
+          <div class="src-tag">${i.source}</div>
+          <a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a>
+          <p>${i.description || ""}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function fetchNews() {
+    try {
+      const feeds = [
+        { url: 'https://feeds.reuters.com/reuters/topNews', source: 'Reuters' },
+        { url: 'https://rss.foxnews.com/fn/latest/feeds/atn', source: 'Fox News' },
+        { url: 'https://rss.cnn.com/rss/edition.rss', source: 'CNN' }
+      ];
+
+      const f = feeds[Math.floor(Math.random() * feeds.length)];
+      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=8`);
+      const d = await r.json();
+
+      if (d.status === 'ok' && d.items?.length) {
+        const it = d.items.slice(0, 8).map(i => ({
+          title: i.title,
+          url: i.link,
+          source: f.source,
+          image: i.thumbnail || fallbackImage(f.source),
+          description: stripHtml(i.description || i.content || "").slice(0, 140)
+        }));
+
+        renderArt(it);
+        TK.splice(0, TK.length, ...it.map(i => i.title));
+      } else {
+        throw new Error("Feed failed");
+      }
+    } catch {
+      renderArt(FB);
+    }
+  }
+
+  rotateTick();
+  setInterval(rotateTick, 5000);
+  fetchNews();
+
+  document.getElementById('refreshNewsBtn')?.addEventListener('click', () => {
+    document.getElementById('liveArticles').innerHTML = '<div class="live-article-loading">Refreshing...</div>';
+    fetchNews();
+  });
+</script>
 <script>
   const imageFallbackMap = {
     "327-media-logo.png": [
