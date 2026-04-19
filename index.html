@@ -163,18 +163,14 @@
     .promo-image-link{position:relative;min-height:258px;border-radius:24px;overflow:hidden;border:1px solid var(--line);display:block;background:var(--panel);}
     .promo-copy strong{display:block;margin-top:8px;font-size:1.55rem;font-weight:900;}
 
-    .markets-home-grid{   display:grid;   grid-template-columns:repeat(2,1fr);   gap:14px;   margin-top:18px; }
-    .market-mini{
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      padding:16px;
-      min-height:120px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-    .market-mini{
+.markets-home-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  margin-top:18px;
+}
+
+.market-mini{
   background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.12);
   border-radius:18px;
@@ -184,7 +180,43 @@
   flex-direction:column;
   justify-content:center;
 }
-    
+
+.market-mini .market-label{
+  font-size:.82rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted2);
+  font-weight:800;
+}
+
+.market-mini .market-price{
+  font-size:1.75rem;
+  font-weight:900;
+  line-height:1.05;
+  margin-top:8px;
+}
+
+.market-mini .market-change{
+  font-size:.95rem;
+  font-weight:800;
+  margin-top:6px;
+}
+
+.market-mini .market-change.up{color:#7fff9e;}
+.market-mini .market-change.down{color:#ff8a8a;}
+
+.market-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.market-note{
+  color:var(--muted);
+  font-size:.9rem;
+  margin-top:10px;
+}
 
     .markets-tool-grid,.sports-grid,.betting-grid,.podcast-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px;}
     .tool-card{padding:22px;}
@@ -352,54 +384,47 @@
         <!-- RIGHT COLUMN -->
         <div class="stack">
 
-          <!-- US MARKETS — 🔴 dot, original 4-col widget layout kept exactly -->
-          <div class="card home-side-blue">
-            <div class="card-body-lg">
-              <div class="eyebrow" style="color:#fff;margin-bottom:0;">🔴 US Markets — Live</div>
-              <h3>Live Market Snapshot</h3>
-              <p>Dow Jones, S&amp;P 500, Nasdaq, and Bitcoin with live refresh right on the home screen.</p>
-              <div class="markets-home-grid">
-                <div class="market-mini">
-                  <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                    {"symbols":[["DJI","DJ:DJI|1D"]],"chartOnly":false,"width":"100%","height":"120","locale":"en","colorTheme":"dark","autosize":true,"showVolume":false,"showMA":false,"hideDateRanges":true,"hideMarketStatus":false,"hideSymbolLogo":false,"scalePosition":"right","scaleMode":"Normal","fontFamily":"Inter, Arial, sans-serif","fontSize":"10","noTimeScale":false,"valuesTracking":"1","changeMode":"price-and-percent","chartType":"area","lineWidth":2,"lineType":0}
-                    </script>
-                  </div>
-                </div>
-                <div class="market-mini">
-                  <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                    {"symbols":[["S&P 500","SP:SPX|1D"]],"chartOnly":false,"width":"100%","height":"120","locale":"en","colorTheme":"dark","autosize":true,"showVolume":false,"showMA":false,"hideDateRanges":true,"hideMarketStatus":false,"hideSymbolLogo":false,"scalePosition":"right","scaleMode":"Normal","fontFamily":"Inter, Arial, sans-serif","fontSize":"10","noTimeScale":false,"valuesTracking":"1","changeMode":"price-and-percent","chartType":"area","lineWidth":2,"lineType":0}
-                    </script>
-                  </div>
-                </div>
-                <div class="market-mini">
-                  <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                    {"symbols":[["NASDAQ","NASDAQ:IXIC|1D"]],"chartOnly":false,"width":"100%","height":"120","locale":"en","colorTheme":"dark","autosize":true,"showVolume":false,"showMA":false,"hideDateRanges":true,"hideMarketStatus":false,"hideSymbolLogo":false,"scalePosition":"right","scaleMode":"Normal","fontFamily":"Inter, Arial, sans-serif","fontSize":"10","noTimeScale":false,"valuesTracking":"1","changeMode":"price-and-percent","chartType":"area","lineWidth":2,"lineType":0}
-                    </script>
-                  </div>
-                </div>
-                <div class="market-mini">
-                  <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                    {"symbols":[["Bitcoin","BITSTAMP:BTCUSD|1D"]],"chartOnly":false,"width":"100%","height":"120","locale":"en","colorTheme":"dark","autosize":true,"showVolume":false,"showMA":false,"hideDateRanges":true,"hideMarketStatus":false,"hideSymbolLogo":false,"scalePosition":"right","scaleMode":"Normal","fontFamily":"Inter, Arial, sans-serif","fontSize":"10","noTimeScale":false,"valuesTracking":"1","changeMode":"price-and-percent","chartType":"area","lineWidth":2,"lineType":0}
-                    </script>
-                  </div>
-                </div>
-              </div>
-              <div class="hero-actions" style="margin-top:18px;">
-                <a href="#stocks" class="btn btn-light">Open Full Markets</a>
-              </div>
-            </div>
-          </div>
+      <!-- US MARKETS -->
+<div class="card home-side-blue">
+  <div class="card-body-lg">
+    <div class="eyebrow" style="color:#fff;margin-bottom:0;">🔴 US Markets — Live</div>
+    <h3>Live Market Snapshot</h3>
+    <p>Dow Jones, S&amp;P 500, Nasdaq, and Bitcoin with live refresh right on the home screen.</p>
 
-        </div>
+    <div class="markets-home-grid">
+      <div class="market-mini">
+        <div class="market-label">Dow Jones</div>
+        <div class="market-price" id="quote-dji-price">Loading...</div>
+        <div class="market-change" id="quote-dji-change">Updating...</div>
       </div>
+
+      <div class="market-mini">
+        <div class="market-label">S&amp;P 500</div>
+        <div class="market-price" id="quote-gspc-price">Loading...</div>
+        <div class="market-change" id="quote-gspc-change">Updating...</div>
+      </div>
+
+      <div class="market-mini">
+        <div class="market-label">Nasdaq</div>
+        <div class="market-price" id="quote-ixic-price">Loading...</div>
+        <div class="market-change" id="quote-ixic-change">Updating...</div>
+      </div>
+
+      <div class="market-mini">
+        <div class="market-label">Bitcoin</div>
+        <div class="market-price" id="quote-btc-price">Loading...</div>
+        <div class="market-change" id="quote-btc-change">Updating...</div>
+      </div>
+    </div>
+
+    <div class="market-actions">
+      <button class="btn btn-light" id="refreshMarketsBtn" type="button">↻ Refresh Markets</button>
+      <a href="#stocks" class="btn btn-dark">Open Full Markets</a>
+    </div>
+
+    <p class="market-note" id="marketsUpdated">Waiting for live market data...</p>
+  </div>
+</div>
 
       <!-- QUICK ACCESS — BLACK -->
       <div class="card card-black" style="margin-top:24px;">
@@ -939,7 +964,77 @@
   });
 </script>
 
+<script>
+  const MARKET_MAP = [
+    { symbol: '%5EDJI', priceId: 'quote-dji-price', changeId: 'quote-dji-change' },
+    { symbol: '%5EGSPC', priceId: 'quote-gspc-price', changeId: 'quote-gspc-change' },
+    { symbol: '%5EIXIC', priceId: 'quote-ixic-price', changeId: 'quote-ixic-change' },
+    { symbol: 'BTC-USD', priceId: 'quote-btc-price', changeId: 'quote-btc-change' }
+  ];
+
+  function formatNumber(value) {
+    return Number(value).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function setMarketValue(priceId, changeId, price, prevClose) {
+    const priceEl = document.getElementById(priceId);
+    const changeEl = document.getElementById(changeId);
+    if (!priceEl || !changeEl) return;
+
+    const diff = price - prevClose;
+    const pct = prevClose ? (diff / prevClose) * 100 : 0;
+    const up = diff >= 0;
+
+    priceEl.textContent = formatNumber(price);
+    changeEl.className = 'market-change ' + (up ? 'up' : 'down');
+    changeEl.textContent = `${up ? '+' : ''}${formatNumber(diff)} (${up ? '+' : ''}${pct.toFixed(2)}%) today`;
+  }
+
+  async function fetchMarketQuote(symbol) {
+    const target = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=5d`;
+    const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`;
+    const res = await fetch(proxy);
+    const txt = await res.text();
+    const data = JSON.parse(txt);
+
+    const result = data?.chart?.result?.[0];
+    const meta = result?.meta;
+    if (!result || !meta) throw new Error('No market data');
+
+    const price = meta.regularMarketPrice;
+    const prevClose = meta.chartPreviousClose ?? meta.previousClose;
+
+    return { price, prevClose };
+  }
+
+  async function refreshMarkets() {
+    const updated = document.getElementById('marketsUpdated');
+    if (updated) updated.textContent = 'Refreshing market data...';
+
+    try {
+      await Promise.all(
+        MARKET_MAP.map(async (m) => {
+          const { price, prevClose } = await fetchMarketQuote(m.symbol);
+          setMarketValue(m.priceId, m.changeId, price, prevClose);
+        })
+      );
+
+      if (updated) {
+        updated.textContent = `Updated ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+      }
+    } catch (err) {
+      if (updated) updated.textContent = 'Live market refresh failed. Try again.';
+    }
+  }
+
+  document.getElementById('refreshMarketsBtn')?.addEventListener('click', refreshMarkets);
+  refreshMarkets();
+  setInterval(refreshMarkets, 60000);
+</script>
+
 </body>
 </html>
-</body>
-</html>
+
