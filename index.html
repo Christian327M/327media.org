@@ -1091,149 +1091,272 @@
 
 <!-- LIVE NEWS -->
 <script>
-  const TK = [
-    "Live global headlines updating now",
-    "Refresh for the newest real stories",
-    "BBC, AP, Yahoo, ESPN, Wired, and Bloomberg updates",
-    "Markets, politics, sports, and tech in one live feed",
-    "Latest article photos and headlines loading live"
+  const FEEDS = [
+    { name: 'Bloomberg', url: 'https://feeds.bloomberg.com/markets/news.rss', badge: 'B', color: 'bg-red-600' },
+    { name: 'WIRED', url: 'https://www.wired.com/feed/rss', badge: 'W', color: 'bg-fuchsia-600' },
+    { name: 'ESPN', url: 'https://www.espn.com/espn/rss/news', badge: 'ESPN', color: 'bg-red-700' },
+    { name: 'Yahoo News', url: 'https://news.yahoo.com/rss/', badge: 'Y!', color: 'bg-purple-700' },
+    { name: 'BBC', url: 'https://feeds.bbci.co.uk/news/rss.xml', badge: 'BBC', color: 'bg-red-800' },
+    { name: 'Associated Press', url: 'https://apnews.com/hub/ap-top-news?output=rss', badge: 'AP', color: 'bg-slate-700' }
   ];
 
-  let ti = 0;
+  const newsGrid = document.getElementById('newsGrid');
+  const refreshNewsBtn = document.getElementById('refreshNewsBtn');
+  const newsLastUpdated = document.getElementById('newsLastUpdated');
+  const newsError = document.getElementById('newsError');
 
-  function rotateTick() {
+  const tickerFallback = [
+    "Live global headlines updating now",
+    "Bloomberg, WIRED, ESPN, Yahoo News, BBC, and AP in one feed",
+    "Refresh for the newest real stories",
+    "Real article cards with direct links and cover images"
+  ];
+
+  let tickerIndex = 0;
+  let lastUpdatedAt = null;
+  let countdownInterval = null;
+  let nextRefreshTimeout = null;
+
+  function rotateTick(items = []) {
     const el = document.getElementById('liveNewsFeed');
-    if (el) el.textContent = TK[ti++ % TK.length];
+    if (!el) return;
+    const pool = items.length ? items.map(i => i.title) : tickerFallback;
+    el.textContent = pool[tickerIndex++ % pool.length];
   }
 
-  function stripHtml(html = "") {
-    const div = document.createElement("div");
+  function showSkeletons(count = 6) {
+    if (!newsGrid) return;
+    newsGrid.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      newsGrid.innerHTML += `
+        <div class="headline-skeleton"></div>
+      `;
+    }
+  }
+
+  function allOriginsUrl(url) {
+    return `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+  }
+
+  function stripHtml(html = '') {
+    const div = document.createElement('div');
     div.innerHTML = html;
-    return (div.textContent || div.innerText || "").trim();
+    return (div.textContent || div.innerText || '').trim();
   }
 
-  function renderArt(items) {
-    const b = document.getElementById('liveArticles');
-    if (!b) return;
+  function summarize(text, max = 145) {
+    if (!text) return 'Open the full story for the latest coverage.';
+    const clean = text.replace(/\s+/g, ' ').trim();
+    if (clean.length <= max) return clean;
+    return clean.slice(0, max).replace(/\s+\S*$/, '') + '…';
+  }
+
+  function parseDate(value) {
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  function relativeTime(date) {
+    if (!date) return 'Unknown time';
+    const diff = Math.floor((Date.now() - date.getTime()) / 60000);
+    if (diff < 1) return 'Just now';
+    if (diff < 60) return `${diff} min ago`;
+    const hours = Math.floor(diff / 60);
+    if (hours < 24) return `${hours} hr ago`;
+    const days = Math.floor(hours / 24);
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  }
+
+  function formattedDate(date) {
+    if (!date) return 'Unknown date';
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(date);
+  }
+
+  function pickImage(item, feedName) {
+    const mediaContent = item.querySelector('media\\:content, content');
+    const mediaThumb = item.querySelector('media\\:thumbnail, thumbnail');
+    const enclosure = item.querySelector('enclosure[url]');
+    const encoded = item.querySelector('content\\:encoded, encoded');
+    const description = item.querySelector('description');
+
+    if (mediaContent?.getAttribute('url')) return mediaContent.getAttribute('url');
+    if (mediaThumb?.getAttribute('url')) return mediaThumb.getAttribute('url');
+
+    const enclosureUrl = enclosure?.getAttribute('url');
+    const enclosureType = enclosure?.getAttribute('type') || '';
+    if (enclosureUrl && enclosureType.startsWith('image/')) return enclosureUrl;
+
+    const htmlSources = [
+      encoded?.textContent || '',
+      description?.textContent || ''
+    ];
+
+    for (const html of htmlSources) {
+      const match =
+        html.match(/<img[^>]+src=["']([^"']+)["']/i) ||
+        html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+        html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+      if (match?.[1]) return match[1];
+    }
+
+    return `https://placehold.co/800x500/0f172a/e5e7eb?text=${encodeURIComponent(feedName)}`;
+  }
+
+  function parseItemsFromXml(xmlText, feedMeta) {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlText, 'text/xml');
+    const items = Array.from(xml.querySelectorAll('item'));
+
+    return items.map(item => {
+      const title = item.querySelector('title')?.textContent?.trim() || '';
+      const link = item.querySelector('link')?.textContent?.trim() || '#';
+      const rawDescription =
+        item.querySelector('description')?.textContent ||
+        item.querySelector('content\\:encoded, encoded')?.textContent ||
+        '';
+      const date =
+        parseDate(item.querySelector('pubDate')?.textContent) ||
+        parseDate(item.querySelector('dc\\:date, date')?.textContent);
+
+      return {
+        title,
+        link,
+        description: summarize(stripHtml(rawDescription)),
+        source: feedMeta.name,
+        sourceBadge: feedMeta.badge,
+        sourceColor: feedMeta.color,
+        image: pickImage(item, feedMeta.name),
+        date,
+        timestampLabel: relativeTime(date),
+        fullDateLabel: formattedDate(date)
+      };
+    }).filter(item => item.title && item.link && item.link !== '#');
+  }
+
+  function renderNewsCards(items) {
+    if (!newsGrid) return;
 
     if (!items.length) {
-      b.innerHTML = `
-        <div class="live-article-loading">
-          No real image articles loaded right now. Hit Refresh to try again.
+      newsGrid.innerHTML = `
+        <div class="card card-body-lg" style="grid-column:1/-1;">
+          <h3 style="margin:0 0 10px;font-size:1.5rem;font-weight:900;">No stories available right now</h3>
+          <p style="margin:0;color:var(--muted);line-height:1.7;">The feeds may be temporarily unavailable. Hit refresh again in a moment.</p>
         </div>
       `;
       return;
     }
 
-    b.innerHTML = items.map(i => `
-      <div class="live-article-item">
-        <a href="${i.url}" target="_blank" rel="noopener noreferrer">
-          <img class="live-article-thumb" src="${i.image}" alt="${i.title}">
+    newsGrid.innerHTML = items.map(item => `
+      <article class="headline-card">
+        <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+          <img src="${item.image}" alt="${item.title.replace(/"/g, '&quot;')}"
+               onerror="this.src='https://placehold.co/800x500/0f172a/e5e7eb?text=${encodeURIComponent(item.source)}'">
         </a>
-        <div class="live-article-copy">
-          <div class="src-tag">${i.source}</div>
-          <a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a>
-          <p>${i.description || ""}</p>
+        <div class="headline-content">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+              <span class="${item.sourceColor}" style="display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:900;letter-spacing:.08em;color:#fff;">${item.sourceBadge}</span>
+              <span class="headline-source" style="margin:0;">${item.source}</span>
+            </div>
+            <span style="font-size:.75rem;color:var(--muted2);white-space:nowrap;">${item.timestampLabel}</span>
+          </div>
+
+          <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="headline-title" style="display:block;">${item.title}</a>
+          <p class="headline-desc">${item.description}</p>
+
+          <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <span style="font-size:.78rem;color:var(--muted2);">${item.fullDateLabel}</span>
+            <a href="${item.link}" target="_blank" rel="noopener noreferrer" style="font-size:.88rem;font-weight:800;color:#fde68a;">Read more →</a>
+          </div>
         </div>
-      </div>
+      </article>
     `).join('');
   }
 
-  async function tryGetOgImage(url) {
-    try {
-      const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-      const res = await fetch(proxy);
-      const html = await res.text();
-
-      const match =
-        html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
-        html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ||
-        html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
-
-      return match ? match[1] : null;
-    } catch {
-      return null;
+  function updateLastUpdatedLabel() {
+    if (!newsLastUpdated) return;
+    if (!lastUpdatedAt) {
+      newsLastUpdated.textContent = 'Last updated: never';
+      return;
     }
+
+    const diffMins = Math.max(0, Math.floor((Date.now() - lastUpdatedAt.getTime()) / 60000));
+    if (diffMins < 1) newsLastUpdated.textContent = 'Last updated: just now';
+    else if (diffMins === 1) newsLastUpdated.textContent = 'Last updated: 1 minute ago';
+    else newsLastUpdated.textContent = `Last updated: ${diffMins} minutes ago`;
   }
 
-  async function fetchOneFeed(feed) {
+  function startLastUpdatedCountdown() {
+    if (countdownInterval) clearInterval(countdownInterval);
+    updateLastUpdatedLabel();
+    countdownInterval = setInterval(updateLastUpdatedLabel, 30000);
+  }
+
+  function scheduleNextRefresh() {
+    if (nextRefreshTimeout) clearTimeout(nextRefreshTimeout);
+    nextRefreshTimeout = setTimeout(fetchAndRenderNews, 25 * 60 * 1000);
+  }
+
+  async function fetchFeed(feedMeta) {
+    const response = await fetch(allOriginsUrl(feedMeta.url));
+    if (!response.ok) throw new Error(`Failed feed: ${feedMeta.name}`);
+    const xmlText = await response.text();
+    return parseItemsFromXml(xmlText, feedMeta);
+  }
+
+  async function fetchAndRenderNews() {
+    if (newsError) newsError.style.display = 'none';
+    showSkeletons(6);
+
     try {
-      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}&count=8`);
-      const d = await r.json();
+      const groups = await Promise.allSettled(FEEDS.map(fetchFeed));
 
-      if (d.status !== 'ok' || !d.items?.length) return [];
-
-      const freshItems = d.items
-        .filter(i => {
-          const pub = i.pubDate ? new Date(i.pubDate) : null;
-          if (!pub || Number.isNaN(pub.getTime())) return true;
-          const ageDays = (Date.now() - pub.getTime()) / (1000 * 60 * 60 * 24);
+      const allItems = groups
+        .filter(r => r.status === 'fulfilled')
+        .flatMap(r => r.value)
+        .filter(item => {
+          if (!item.date) return true;
+          const ageDays = (Date.now() - item.date.getTime()) / (1000 * 60 * 60 * 24);
           return ageDays <= 7;
         })
-        .slice(0, 4);
-
-      const mapped = await Promise.all(
-        freshItems.map(async (i) => {
-          let image =
-            i.thumbnail ||
-            i.enclosure?.link ||
-            i.enclosure ||
-            null;
-
-          if (!image) {
-            image = await tryGetOgImage(i.link);
-          }
-
-          if (!image) return null;
-
-          return {
-            title: i.title,
-            url: i.link,
-            source: feed.source,
-            image,
-            description: stripHtml(i.description || i.content || "").slice(0, 140)
-          };
+        .sort((a, b) => {
+          const at = a.date ? a.date.getTime() : 0;
+          const bt = b.date ? b.date.getTime() : 0;
+          return bt - at;
         })
-      );
+        .slice(0, 6);
 
-      return mapped.filter(Boolean);
-    } catch {
-      return [];
+      renderNewsCards(allItems);
+
+      if (allItems.length) {
+        tickerIndex = 0;
+        rotateTick(allItems);
+        if (window.__newsTickerInterval) clearInterval(window.__newsTickerInterval);
+        window.__newsTickerInterval = setInterval(() => rotateTick(allItems), 5000);
+      }
+
+      lastUpdatedAt = new Date();
+      startLastUpdatedCountdown();
+      scheduleNextRefresh();
+    } catch (err) {
+      if (newsError) {
+        newsError.textContent = 'Live feeds are temporarily unavailable. Try refreshing again.';
+        newsError.style.display = 'block';
+      }
+      renderNewsCards([]);
     }
   }
 
-  async function fetchNews() {
-    const feeds = [
-      { source: "BBC", url: "https://feeds.bbci.co.uk/news/rss.xml" },
-      { source: "Associated Press", url: "https://apnews.com/hub/apf-topnews?output=rss" },
-      { source: "Yahoo News", url: "https://news.yahoo.com/rss/" },
-      { source: "ESPN", url: "https://www.espn.com/espn/rss/news" },
-      { source: "Wired", url: "https://www.wired.com/feed/rss" },
-      { source: "Bloomberg", url: "https://feeds.bloomberg.com/markets/news.rss" }
-    ];
-
-    const box = document.getElementById('liveArticles');
-    if (box) {
-      box.innerHTML = '<div class="live-article-loading">Loading live articles...</div>';
-    }
-
-    const groups = await Promise.all(feeds.map(fetchOneFeed));
-    const items = groups.flat().slice(0, 6);
-
-    renderArt(items);
-
-    if (items.length) {
-      TK.splice(0, TK.length, ...items.map(i => i.title));
-    }
+  if (refreshNewsBtn) {
+    refreshNewsBtn.addEventListener('click', fetchAndRenderNews);
   }
 
-  rotateTick();
-  setInterval(rotateTick, 5000);
-  fetchNews();
-
-  document.getElementById('refreshNewsBtn')?.addEventListener('click', () => {
-    fetchNews();
-  });
+  fetchAndRenderNews();
 </script>
 <script>
   const imageFallbackMap = {
