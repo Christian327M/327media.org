@@ -161,7 +161,7 @@
   border:1px solid var(--line);
   border-radius:18px;
   padding:14px;
-  max-height:340px;
+  max-height:620px;
   overflow-y:auto;
   margin-top:14px;
 }
@@ -1054,12 +1054,15 @@
     return (div.textContent || div.innerText || "").trim();
   }
 
-  function fallbackImage(source = "") {
-    if (source === "Reuters") return "reuters.jpg";
-    if (source === "Fox News") return "fox-news.jpg";
-    if (source === "CNN") return "cnn.jpg";
-    return "left-media-main.jpg";
-  }
+function fallbackImage(source = "") {
+  if (source === "Bloomberg") return "reuters.jpg";
+  if (source === "BBC") return "left-media-main.jpg";
+  if (source === "Associated Press") return "left-media-main.jpg";
+  if (source === "Yahoo News") return "cnn.jpg";
+  if (source === "Wired") return "left-media-main.jpg";
+  if (source === "ESPN") return "sports-nba.jpg";
+  return "left-media-main.jpg";
+}
 
   function renderArt(items) {
     const b = document.getElementById('liveArticles');
@@ -1082,30 +1085,45 @@
 async function fetchNews() {
   try {
     const feeds = [
-      { url: 'https://feeds.reuters.com/reuters/topNews', source: 'Reuters' },
-      { url: 'https://rss.foxnews.com/fn/latest/feeds/atn', source: 'Fox News' },
-      { url: 'https://rss.cnn.com/rss/edition.rss', source: 'CNN' }
+      { url: 'https://feeds.bbci.co.uk/news/rss.xml', source: 'BBC' },
+      { url: 'https://apnews.com/hub/ap-top-news?output=rss', source: 'Associated Press' },
+      { url: 'https://sports.yahoo.com/top/rss.xml', source: 'Yahoo News' },
+      { url: 'https://www.espn.com/espn/rss/news', source: 'ESPN' },
+      { url: 'https://www.wired.com/feed/rss', source: 'Wired' },
+      { url: 'https://feeds.bloomberg.com/markets/news.rss', source: 'Bloomberg' }
     ];
 
     const requests = feeds.map(async (f) => {
-      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=4`);
-      const d = await r.json();
+      try {
+        const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=3`);
+        const d = await r.json();
 
-      if (d.status === 'ok' && d.items?.length) {
-        return d.items.slice(0, 4).map(i => ({
-          title: i.title,
-          url: i.link,
-          source: f.source,
-          image: i.thumbnail || fallbackImage(f.source),
-          description: stripHtml(i.description || i.content || "").slice(0, 140)
-        }));
+        if (d.status === 'ok' && d.items?.length) {
+          return d.items
+            .filter(i => {
+              const pub = i.pubDate ? new Date(i.pubDate) : null;
+              if (!pub || Number.isNaN(pub.getTime())) return true;
+              const ageDays = (Date.now() - pub.getTime()) / (1000 * 60 * 60 * 24);
+              return ageDays <= 7;
+            })
+            .slice(0, 3)
+            .map(i => ({
+              title: i.title,
+              url: i.link,
+              source: f.source,
+              image: i.thumbnail || fallbackImage(f.source),
+              description: stripHtml(i.description || i.content || "").slice(0, 140)
+            }));
+        }
+      } catch (e) {
+        return [];
       }
 
       return [];
     });
 
     const groups = await Promise.all(requests);
-    const it = groups.flat().slice(0, 9);
+    const it = groups.flat().slice(0, 12);
 
     if (!it.length) throw new Error("Feed failed");
 
