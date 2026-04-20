@@ -94,30 +94,30 @@
     .card-body-lg{padding:30px}
     .card-black{background:#000 !important;border-color:rgba(255,255,255,.1) !important;}
 
-  .hero-grid{
+.hero-grid{
   display:grid;
-  grid-template-columns:1.35fr .85fr;
+  grid-template-columns:1.52fr .78fr;
   gap:24px;
   align-items:stretch;
 }
-
     /* VIDEO — taller + 🔴 live dot */
-  .video-wrap{
+.video-wrap{
   position:relative;
   overflow:hidden;
   border-radius:22px;
   border:1px solid var(--line);
   box-shadow:var(--shadow);
   background:#0b1636;
-  min-height:640px;
+  aspect-ratio:16 / 9;
+  min-height:0;
 }
 
 .video-wrap iframe{
   width:100%;
   height:100%;
-  min-height:640px;
   border:0;
   display:block;
+  aspect-ratio:16 / 9;
 }
     .live-dot{position:absolute;top:14px;left:14px;z-index:10;background:var(--red);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.14em;padding:6px 12px;border-radius:999px;pointer-events:none;animation:pulse-dot 2s infinite;}
     @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.5}}
@@ -677,12 +677,31 @@
           <div class="eyebrow" style="margin-bottom:4px;">Quick Access</div>
           <h2 style="margin:0 0 8px;font-size:1.9rem;font-weight:900;">Jump into the biggest sections</h2>
           <p class="section-sub" style="max-width:none;">Headlines, White House, markets, sports, podcast, and article discovery — all built for faster browsing.</p>
-          <div class="quick-grid">
-            <a href="#news" class="quick-link"><div class="eyebrow" style="margin-bottom:2px;">News</div><strong>Read Top Headlines</strong><span>Open your main front-page stories and media-source breakdowns.</span></a>
-            <a href="#white-house" class="quick-link"><div class="eyebrow" style="margin-bottom:2px;">White House</div><strong>Watch Live Coverage</strong><span>Go straight to live coverage, streams, and official White House links.</span></a>
-            <a href="#stocks" class="quick-link"><div class="eyebrow" style="margin-bottom:2px;">Markets</div><strong>Track Markets</strong><span>View stock categories, heatmap, and live chart tools.</span></a>
-            <a href="#podcast" class="quick-link"><div class="eyebrow" style="margin-bottom:2px;">Podcast</div><strong>Listen CIA Podcast</strong><span>Go straight to your featured channel and photo layout.</span></a>
-          </div>
+<div class="quick-grid">
+  <a href="#news" class="quick-link" style="background:rgba(225,6,0,.18);border-color:rgba(225,6,0,.35);">
+    <div class="eyebrow" style="margin-bottom:2px;">News</div>
+    <strong>Read Top Headlines</strong>
+    <span>Open your main front-page stories and media-source breakdowns.</span>
+  </a>
+
+  <a href="#white-house" class="quick-link" style="background:rgba(20,53,122,.35);border-color:rgba(96,165,250,.28);">
+    <div class="eyebrow" style="margin-bottom:2px;">White House</div>
+    <strong>Watch Live Coverage</strong>
+    <span>Go straight to live coverage, streams, and official White House links.</span>
+  </a>
+
+  <a href="#stocks" class="quick-link" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.32);">
+    <div class="eyebrow" style="margin-bottom:2px;">Markets</div>
+    <strong>Track Markets</strong>
+    <span>View stock categories, heatmap, and live chart tools.</span>
+  </a>
+
+  <a href="#podcast" class="quick-link" style="background:rgba(249,115,22,.18);border-color:rgba(249,115,22,.34);">
+    <div class="eyebrow" style="margin-bottom:2px;">Podcast</div>
+    <strong>Listen CIA Podcast</strong>
+    <span>Go straight to your featured channel and photo layout.</span>
+  </a>
+</div>
         </div>
       </div>
     </div>
@@ -1344,21 +1363,41 @@
     try {
       const groups = await Promise.allSettled(FEEDS.map(fetchFeed));
 
-      const allItems = groups
-        .filter(r => r.status === 'fulfilled')
-        .flatMap(r => r.value)
-        .filter(item => {
-          if (!item.date) return true;
-          const ageDays = (Date.now() - item.date.getTime()) / (1000 * 60 * 60 * 24);
-          return ageDays <= 7;
-        })
-        .sort((a, b) => {
-          const at = a.date ? a.date.getTime() : 0;
-          const bt = b.date ? b.date.getTime() : 0;
-          return bt - at;
-        })
-        .slice(0, 6);
+     const perSource = groups
+  .filter(r => r.status === 'fulfilled')
+  .map(r => r.value
+    .filter(item => {
+      if (!item.date) return true;
+      const ageDays = (Date.now() - item.date.getTime()) / (1000 * 60 * 60 * 24);
+      return ageDays <= 7;
+    })
+    .sort((a, b) => {
+      const at = a.date ? a.date.getTime() : 0;
+      const bt = b.date ? b.date.getTime() : 0;
+      return bt - at;
+    })
+    .slice(0, 2)
+  );
 
+const mixed = [];
+let round = 0;
+
+while (mixed.length < 6) {
+  let addedThisRound = false;
+
+  for (const arr of perSource) {
+    if (arr[round]) {
+      mixed.push(arr[round]);
+      addedThisRound = true;
+      if (mixed.length >= 6) break;
+    }
+  }
+
+  if (!addedThisRound) break;
+  round++;
+}
+
+const allItems = mixed;
       renderNewsCards(allItems);
 
       if (allItems.length) {
