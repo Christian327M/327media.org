@@ -161,7 +161,7 @@
   border:1px solid var(--line);
   border-radius:18px;
   padding:14px;
-  max-height:620px;
+  max-height:720px;
   overflow-y:auto;
   margin-top:14px;
 }
@@ -999,30 +999,6 @@
 
 <!-- LIVE NEWS -->
 <script>
-  const FB = [
-    {
-      title: "Live global headlines are updating now",
-      source: "BBC",
-      url: "https://www.bbc.com/news",
-      image: "left-media-main.jpg",
-      description: "Refresh for the latest real headlines from major outlets."
-    },
-    {
-      title: "Business and market stories are moving across major outlets",
-      source: "Bloomberg",
-      url: "https://www.bloomberg.com/",
-      image: "reuters.jpg",
-      description: "Track finance, markets, and economic headlines in one place."
-    },
-    {
-      title: "Sports, politics, tech, and breaking coverage refresh here",
-      source: "ESPN",
-      url: "https://www.espn.com/",
-      image: "sports-nba.jpg",
-      description: "Browse live headlines and click through to the full stories."
-    }
-  ];
-
   const TK = [
     "Live global headlines updating now",
     "Refresh for the newest real stories",
@@ -1058,10 +1034,24 @@
     const b = document.getElementById('liveArticles');
     if (!b) return;
 
+    if (!items.length) {
+      b.innerHTML = `
+        <div class="live-article-loading">
+          No live articles loaded right now. Hit Refresh to try again.
+        </div>
+      `;
+      return;
+    }
+
     b.innerHTML = items.map(i => `
       <div class="live-article-item">
         <a href="${i.url}" target="_blank" rel="noopener noreferrer">
-          <img class="live-article-thumb" src="${i.image}" alt="${i.title}" onerror="this.src='left-media-main.jpg'">
+          <img
+            class="live-article-thumb"
+            src="${i.image}"
+            alt="${i.title}"
+            onerror="this.src='left-media-main.jpg'"
+          >
         </a>
         <div class="live-article-copy">
           <div class="src-tag">${i.source}</div>
@@ -1072,52 +1062,87 @@
     `).join('');
   }
 
-  async function fetchOneFeed(f) {
+  async function tryGetOgImage(url) {
     try {
-      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=3`);
+      const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+      const res = await fetch(proxy);
+      const html = await res.text();
+
+      const match =
+        html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+        html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ||
+        html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+
+      return match ? match[1] : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function fetchOneFeed(feed) {
+    try {
+      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}&count=6`);
       const d = await r.json();
 
-      if (d.status === 'ok' && d.items?.length) {
-        return d.items
-          .filter(i => {
-            const pub = i.pubDate ? new Date(i.pubDate) : null;
-            if (!pub || Number.isNaN(pub.getTime())) return true;
-            const ageDays = (Date.now() - pub.getTime()) / (1000 * 60 * 60 * 24);
-            return ageDays <= 7;
-          })
-          .slice(0, 3)
-          .map(i => ({
+      if (d.status !== 'ok' || !d.items?.length) return [];
+
+      const freshItems = d.items
+        .filter(i => {
+          const pub = i.pubDate ? new Date(i.pubDate) : null;
+          if (!pub || Number.isNaN(pub.getTime())) return true;
+          const ageDays = (Date.now() - pub.getTime()) / (1000 * 60 * 60 * 24);
+          return ageDays <= 7;
+        })
+        .slice(0, 2);
+
+      const mapped = await Promise.all(
+        freshItems.map(async (i) => {
+          let image =
+            i.thumbnail ||
+            i.enclosure?.link ||
+            i.enclosure ||
+            null;
+
+          if (!image) {
+            image = await tryGetOgImage(i.link);
+          }
+
+          return {
             title: i.title,
             url: i.link,
-            source: f.source,
-            image: i.thumbnail || fallbackImage(f.source),
+            source: feed.source,
+            image: image || fallbackImage(feed.source),
             description: stripHtml(i.description || i.content || "").slice(0, 140)
-          }));
-      }
-    } catch (e) {
+          };
+        })
+      );
+
+      return mapped;
+    } catch {
       return [];
     }
-    return [];
   }
 
   async function fetchNews() {
     const feeds = [
-      { url: 'https://feeds.bbci.co.uk/news/rss.xml', source: 'BBC' },
-      { url: 'https://apnews.com/hub/ap-top-news?output=rss', source: 'Associated Press' },
-      { url: 'https://sports.yahoo.com/top/rss.xml', source: 'Yahoo News' },
-      { url: 'https://www.espn.com/espn/rss/news', source: 'ESPN' },
-      { url: 'https://www.wired.com/feed/rss', source: 'Wired' },
-      { url: 'https://feeds.bloomberg.com/markets/news.rss', source: 'Bloomberg' }
+      { source: "Bloomberg", url: "https://feeds.bloomberg.com/markets/news.rss" },
+      { source: "Wired", url: "https://www.wired.com/feed/rss" },
+      { source: "ESPN", url: "https://www.espn.com/espn/rss/news" },
+      { source: "Yahoo News", url: "https://news.yahoo.com/rss/" },
+      { source: "BBC", url: "https://feeds.bbci.co.uk/news/rss.xml" },
+      { source: "Associated Press", url: "https://apnews.com/hub/ap-top-news?output=rss" }
     ];
 
+    document.getElementById('liveArticles').innerHTML =
+      '<div class="live-article-loading">Loading live articles...</div>';
+
     const groups = await Promise.all(feeds.map(fetchOneFeed));
-    const items = groups.flat().slice(0, 12);
+    const items = groups.flat().slice(0, 6);
+
+    renderArt(items);
 
     if (items.length) {
-      renderArt(items);
-      TK.splice(0, TK.length, ...items.slice(0, 8).map(i => i.title));
-    } else {
-      renderArt(FB);
+      TK.splice(0, TK.length, ...items.map(i => i.title));
     }
   }
 
@@ -1126,7 +1151,6 @@
   fetchNews();
 
   document.getElementById('refreshNewsBtn')?.addEventListener('click', () => {
-    document.getElementById('liveArticles').innerHTML = '<div class="live-article-loading">Refreshing...</div>';
     fetchNews();
   });
 </script>
