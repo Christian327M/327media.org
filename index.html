@@ -166,6 +166,96 @@
   margin-top:14px;
 }
 
+/* HEADLINE CARD GRID (NEW SYSTEM) */
+.headline-card-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+  margin-top:10px;
+}
+
+/* CARD */
+.headline-card{
+  display:block;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:20px;
+  overflow:hidden;
+  transition:.2s ease;
+}
+
+.headline-card:hover{
+  transform:translateY(-3px);
+  background:var(--soft);
+}
+
+/* IMAGE */
+.headline-card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-bottom:1px solid var(--line);
+}
+
+/* CONTENT */
+.headline-content{
+  padding:16px;
+}
+
+.headline-source{
+  font-size:.7rem;
+  font-weight:900;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted2);
+  margin-bottom:6px;
+}
+
+.headline-title{
+  font-size:1.05rem;
+  font-weight:900;
+  line-height:1.4;
+  margin-bottom:8px;
+  color:#fff;
+}
+
+.headline-desc{
+  font-size:.9rem;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+/* SKELETON LOADING */
+.headline-skeleton{
+  height:280px;
+  border-radius:20px;
+  background:linear-gradient(90deg,#1e3a8a 25%,#2c5fd6 50%,#1e3a8a 75%);
+  background-size:200% 100%;
+  animation:loading 1.5s infinite;
+}
+
+@keyframes loading{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
+}
+
+/* MOBILE */
+@media(max-width:1000px){
+  .headline-card-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:640px){
+  .headline-card-grid{
+    grid-template-columns:1fr;
+  }
+
+  .headline-card img{
+    height:220px;
+  }
+}
+    
 .live-article-item{
   display:grid;
   grid-template-columns:140px 1fr;
@@ -630,88 +720,81 @@
     </div>
   </section>
 
-  <!-- NEWS -->
-  <section id="news" class="section">
-    <div class="container">
-      <div class="eyebrow">Top Story</div>
-      <h2 class="section-title">Top Headlines</h2>
-      <p class="section-sub">Latest reporting from major wire, conservative, mainstream, and tech outlets — organized for a fast homepage read.</p>
+<!-- NEWS -->
+<section id="news" class="section">
+  <div class="container">
+    <div class="eyebrow">Top Story</div>
+    <h2 class="section-title">Top Headlines</h2>
+    <p class="section-sub">Latest reporting from major wire, business, sports, and tech outlets — organized for fast daily browsing.</p>
 
-      <!-- LIVE TICKER BAR -->
-      <div class="live-news-bar">
-        <span class="live-badge">🔴 LIVE</span>
-        <div class="live-news-scroll" id="liveNewsFeed">Loading latest headlines...</div>
-        <button class="refresh-btn" id="refreshNewsBtn">↻ Refresh</button>
-      </div>
+    <div class="live-news-bar">
+      <span class="live-badge">🔴 LIVE</span>
+      <div class="live-news-scroll" id="liveNewsFeed">Loading latest headlines...</div>
+      <button class="refresh-btn" id="refreshNewsBtn">↻ Refresh</button>
+    </div>
 
-      <div class="news-grid">
-     
-        <div class="card">
-          <div class="card-body-lg">
-            <div class="eyebrow" style="margin-bottom:0;">🔴 Live Updates</div>
-            <h3 style="margin:10px 0 12px;font-size:1.55rem;font-weight:900;">Auto-refreshing news feed</h3>
-            <p style="margin:0;color:var(--muted);line-height:1.7;">Latest articles pulled live. Hit Refresh to get the newest stories right now.</p>
-            <div id="liveArticles" class="live-articles-box"><div class="live-article-loading">Loading live articles...</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 18px;">
+      <div class="eyebrow" style="margin-bottom:0;">🔴 Live Updates</div>
+      <span id="newsLastUpdated" style="color:var(--muted2);font-size:.9rem;">Last updated: never</span>
+    </div>
+
+    <div id="newsError" style="display:none;margin-bottom:16px;padding:14px 16px;border-radius:16px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fde68a;font-size:.92rem;"></div>
+
+    <div id="newsGrid" class="headline-card-grid"></div>
+
+    <div class="split-grid" style="margin-top:28px;">
+      <div class="card">
+        <img src="left-media-main.jpg" alt="Left media coverage" class="media-image" />
+        <div class="card-body-lg">
+          <div class="eyebrow" style="margin-bottom:0;">Left Media Coverage</div>
+          <h3 style="margin:8px 0 18px;font-size:1.5rem;font-weight:900;">Mainstream &amp; left-leaning coverage</h3>
+
+          <div class="mini-source-grid">
+            <a class="mini-source-card" href="https://www.reuters.com/" target="_blank" rel="noopener noreferrer">
+              <img src="reuters.jpg" alt="Reuters" />
+              <strong>Reuters</strong>
+            </a>
+
+            <a class="mini-source-card" href="https://www.cnn.com/" target="_blank" rel="noopener noreferrer">
+              <img src="cnn.jpg" alt="CNN" />
+              <strong>CNN</strong>
+            </a>
+
+            <a class="mini-source-card" href="https://www.msnbc.com/" target="_blank" rel="noopener noreferrer">
+              <img src="msnbc.jpg" alt="MSNBC" />
+              <strong>MSNBC</strong>
+            </a>
           </div>
         </div>
       </div>
 
-     <div class="split-grid">
-  <div class="card">
-    <img src="left-media-main.jpg" alt="Left media coverage" class="media-image" />
-    <div class="card-body-lg">
-      <div class="eyebrow" style="margin-bottom:0;">Left Media Coverage</div>
-      <h3 style="margin:8px 0 18px;font-size:1.5rem;font-weight:900;">Mainstream &amp; left-leaning coverage</h3>
+      <div class="card">
+        <img src="right-media-main.jpg" alt="Right media coverage" class="media-image" />
+        <div class="card-body-lg">
+          <div class="eyebrow" style="margin-bottom:0;">Right Media Coverage</div>
+          <h3 style="margin:8px 0 18px;font-size:1.5rem;font-weight:900;">Conservative &amp; right-leaning coverage</h3>
 
-      <div class="mini-source-grid">
-        <a class="mini-source-card" href="https://www.reuters.com/" target="_blank" rel="noopener noreferrer">
-          <img src="reuters.jpg" alt="Reuters" />
-          <strong>Reuters</strong>
-        </a>
+          <div class="mini-source-grid">
+            <a class="mini-source-card" href="https://www.foxnews.com/" target="_blank" rel="noopener noreferrer">
+              <img src="fox-news.jpg" alt="Fox News" />
+              <strong>Fox News</strong>
+            </a>
 
-        <a class="mini-source-card" href="https://www.cnn.com/" target="_blank" rel="noopener noreferrer">
-          <img src="cnn.jpg" alt="CNN" />
-          <strong>CNN</strong>
-        </a>
+            <a class="mini-source-card" href="https://www.dailywire.com/" target="_blank" rel="noopener noreferrer">
+              <img src="daily-wire.jpg" alt="The Daily Wire" />
+              <strong>The Daily Wire</strong>
+            </a>
 
-        <a class="mini-source-card" href="https://www.msnbc.com/" target="_blank" rel="noopener noreferrer">
-          <img src="msnbc.jpg" alt="MSNBC" />
-          <strong>MSNBC</strong>
-        </a>
+            <a class="mini-source-card" href="https://nypost.com/" target="_blank" rel="noopener noreferrer">
+              <img src="new-york-post.jpg" alt="New York Post" />
+              <strong>New York Post</strong>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="card">
-    <img src="right-media-main.jpg" alt="Right media coverage" class="media-image" />
-    <div class="card-body-lg">
-      <div class="eyebrow" style="margin-bottom:0;">Right Media Coverage</div>
-      <h3 style="margin:8px 0 18px;font-size:1.5rem;font-weight:900;">Conservative &amp; right-leaning coverage</h3>
-
-      <div class="mini-source-grid">
-        <a class="mini-source-card" href="https://www.foxnews.com/" target="_blank" rel="noopener noreferrer">
-          <img src="fox-news.jpg" alt="Fox News" />
-          <strong>Fox News</strong>
-        </a>
-
-        <a class="mini-source-card" href="https://www.dailywire.com/" target="_blank" rel="noopener noreferrer">
-          <img src="daily-wire.jpg" alt="The Daily Wire" />
-          <strong>The Daily Wire</strong>
-        </a>
-
-        <a class="mini-source-card" href="https://nypost.com/" target="_blank" rel="noopener noreferrer">
-          <img src="new-york-post.jpg" alt="New York Post" />
-          <strong>New York Post</strong>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-      
-      </div>
-    </div>
-  </section>
-
+</section>
   <!-- WHITE HOUSE -->
   <section id="white-house" class="section">
     <div class="container">
