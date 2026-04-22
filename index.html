@@ -2005,9 +2005,9 @@
     renderBracket();
   }
 
-  async function fetchNbaGames() {
-    const season = "2025";
-    const url = `https://v1.basketball.api-sports.io/games?league=12&season=${season}&last=50`;
+async function fetchNbaGames() {
+  const season = "2025";
+  const url = `https://v1.basketball.api-sports.io/games?league=12&season=${season}&date=${ACTIVE_DATE}`;
 
     const res = await fetch(url, {
       method: "GET",
@@ -2059,13 +2059,13 @@
         updateTimeStamp(`${league.toUpperCase()} league board`);
         feedStatusEl.textContent = `${league.toUpperCase()} section active.`;
       }
-    } catch (error) {
-      console.error(error);
-      feedStatusEl.textContent = `${league.toUpperCase()} feed failed to load. Check API key or request limits.`;
-      scoreRailEl.innerHTML = `<div class="sports-empty">Live NBA scoreboard failed to load.</div>`;
-      leagueBoardEl.innerHTML = `<div class="sports-empty">Check your API key, quota, or request headers.</div>`;
-      quickRailEl.innerHTML = `<div class="sports-empty">No quick matchups available.</div>`;
-    }
+} catch (error) {
+  console.error("Sports feed error:", error);
+  feedStatusEl.textContent = `${league.toUpperCase()} feed failed: ${error.message}`;
+  scoreRailEl.innerHTML = `<div class="sports-empty">Live ${league.toUpperCase()} scoreboard failed to load.</div>`;
+  leagueBoardEl.innerHTML = `<div class="sports-empty">Error: ${error.message}</div>`;
+  quickRailEl.innerHTML = `<div class="sports-empty">No quick matchups available.</div>`;
+}
   }
 
   async function refreshAllLeagues() {
